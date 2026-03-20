@@ -1,215 +1,199 @@
-import React, { useState, useEffect } from "react";
-import { HashRouter as Router, useSearchParams } from "react-router-dom";
-import { Search, MapPin, Sparkles, Zap, Package } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Search, ArrowRight, Shield, Gamepad2, Music, UtensilsCrossed, Wind, Snowflake, PartyPopper, MapPin } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import heroImg from "@/assets/hero-party.jpg";
 
-/**
- * Interface para os Produtos
- */
-interface Produto {
-  id: number;
-  nome: string;
-  categoria: string;
-  cidade: string;
-  preco: string;
-  imagem_url: string;
-  locador_nome: string;
-}
-
-const categorias = [
-  "Todos", 
-  "Mesas de Jogos", 
-  "Brinquedos Infláveis", 
-  "Alimentação", 
-  "Som e Iluminação", 
-  "Refrigeração", 
-  "Camas Elásticas", 
-  "Piscinas de Bolinha"
+const categories = [
+  { icon: Gamepad2, name: "Jogos", color: "from-emerald-500/10 to-emerald-500/5" },
+  { icon: Wind, name: "Infláveis", color: "from-sky-500/10 to-sky-500/5" },
+  { icon: UtensilsCrossed, name: "Alimentação", color: "from-amber-500/10 to-amber-500/5" },
+  { icon: Music, name: "Som e Iluminação", color: "from-rose-500/10 to-rose-500/5" },
+  { icon: Snowflake, name: "Refrigeração", color: "from-cyan-500/10 to-cyan-500/5" },
+  { icon: PartyPopper, name: "Decoração", color: "from-fuchsia-500/10 to-fuchsia-500/5" },
 ];
 
-/**
- * HomepageContent Component
- * Contém a lógica que utiliza hooks do router.
- */
-function HomepageContent() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  const [search, setSearch] = useState(searchParams.get("q") || "");
-  const [categoria, setCategoria] = useState(searchParams.get("categoria") || "Todos");
+const steps = [
+  { step: "01", title: "Busque", desc: "Encontre o produto ideal por categoria ou região." },
+  { step: "02", title: "Pré-cadastre-se", desc: "Preencha Nome, CPF e Endereço para segurança." },
+  { step: "03", title: "Negocie", desc: "Contato liberado após verificação. Feche o negócio!" },
+];
+
+const HomePage = () => {
+  const { ref: heroRef, isVisible: heroVis } = useScrollReveal();
+  const { ref: catRef, isVisible: catVis } = useScrollReveal();
+  const { ref: stepsRef, isVisible: stepsVis } = useScrollReveal();
+  const { ref: featRef, isVisible: featVis } = useScrollReveal();
+
+  const [search, setSearch] = useState("");
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchProdutos = async () => {
-      setLoading(true);
-      try {
-        // Simulação de carregamento (Mock Data)
-        await new Promise(resolve => setTimeout(resolve, 600));
-        
-        const mockData: Produto[] = [
-          { id: 1, nome: "Mesa de Air Hockey Profissional", categoria: "Mesas de Jogos", cidade: "São Paulo", preco: "R$ 150,00", imagem_url: "https://images.unsplash.com/photo-1543569612-4f386341295b?auto=format&fit=crop&q=60&w=600", locador_nome: "Festa Total" },
-          { id: 2, nome: "Castelo Inflável Colorido", categoria: "Brinquedos Infláveis", cidade: "Campinas", preco: "R$ 200,00", imagem_url: "https://images.unsplash.com/photo-1533777857419-370500bb218c?auto=format&fit=crop&q=60&w=600", locador_nome: "Kids Fun" },
-          { id: 3, nome: "Máquina de Algodão Doce", categoria: "Alimentação", cidade: "Santo André", preco: "R$ 80,00", imagem_url: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&q=60&w=600", locador_nome: "Doce Evento" }
-        ];
-
-        const filtered = mockData.filter(p => {
-          const matchSearch = p.nome.toLowerCase().includes(search.toLowerCase());
-          const matchCat = categoria === "Todos" || p.categoria === categoria;
-          return matchSearch && matchCat;
-        });
-        
-        setProdutos(filtered);
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProdutos();
-  }, [search, categoria]);
-
-  const handleSearchChange = (val: string) => {
-    setSearch(val);
-    setSearchParams({ q: val, categoria });
-  };
-
-  const handleCategoriaChange = (cat: string) => {
-    setCategoria(cat);
-    setSearchParams({ q: search, categoria: cat });
-  };
+    supabase
+      .from("produtos")
+      .select("*, locadores(nome, cidade)")
+      .eq("destaque", true)
+      .limit(6)
+      .then(({ data }) => {
+        if (data) setFeaturedProducts(data);
+      });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-orange-500/30 overflow-x-hidden relative">
-      
-      {/* Background Animado */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-500/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 rounded-full blur-[120px] animate-pulse [animation-delay:2s]" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#020617] via-[#0f172a] to-[#020617] animate-gradient" />
-      </div>
-
-      <style>{`
-        @keyframes gradientMove {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradientMove 15s ease infinite;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .glass-panel {
-          background: rgba(30, 41, 59, 0.6);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-      `}</style>
-
-      {/* Hero Section */}
-      <section className="relative w-full pt-16 pb-12 flex flex-col items-center justify-center z-10 text-center px-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-400 text-[10px] font-black uppercase tracking-widest mb-4">
-          <Sparkles size={12} className="animate-pulse" /> LocaHub Produção
+    <div>
+      {/* Hero */}
+      <section ref={heroRef} className="relative overflow-hidden" style={{ background: "var(--hero-gradient)" }}>
+        <div className="absolute inset-0">
+          <img src={heroImg} alt="" className="w-full h-full object-cover opacity-10" />
         </div>
-        <h1 className="text-3xl md:text-5xl font-black mb-2 text-white tracking-tighter">
-          Produtos para <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-600 font-black">Locação</span>
-        </h1>
+        <div className="relative z-10 max-w-7xl mx-auto section-padding py-24 md:py-36">
+          <div className="max-w-2xl space-y-6">
+            <div className={`inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-2 text-sm text-white/80 ${heroVis ? "reveal-up" : "opacity-0"}`}>
+              <Shield size={16} className="text-accent" />
+              Pré-cadastro obrigatório para sua segurança
+            </div>
+
+            <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.08] tracking-tight text-balance ${heroVis ? "reveal-up-delay-1" : "opacity-0"}`}>
+              Alugue itens para <span className="text-accent">festas e eventos</span> com segurança
+            </h1>
+
+            <p className={`text-lg text-white/60 max-w-lg text-pretty ${heroVis ? "reveal-up-delay-2" : "opacity-0"}`}>
+              Encontre locadores confiáveis por região. Tudo organizado em uma plataforma profissional.
+            </p>
+
+            {/* Search bar */}
+            <div className={`flex gap-2 max-w-lg ${heroVis ? "reveal-up-delay-3" : "opacity-0"}`}>
+              <div className="flex-1 relative">
+                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Buscar produto, ex: cama elástica..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full h-12 pl-11 pr-4 rounded-lg bg-white text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+              <Link to={`/produtos${search ? `?q=${encodeURIComponent(search)}` : ""}`}>
+                <Button variant="accent" size="lg" className="h-12">
+                  Buscar
+                </Button>
+              </Link>
+            </div>
+
+            <div className={`flex flex-wrap gap-4 pt-2 ${heroVis ? "reveal-up-delay-4" : "opacity-0"}`}>
+              <Link to="/produtos">
+                <Button variant="hero" size="lg">
+                  Quero alugar <ArrowRight size={16} />
+                </Button>
+              </Link>
+              <Link to="/cadastro-locador">
+                <Button variant="heroOutline" size="lg">
+                  Quero anunciar meus produtos
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20">
-        
-        {/* Barra de Pesquisa */}
-        <div className="mb-10 max-w-3xl mx-auto">
-          <div className="glass-panel p-1 rounded-full shadow-2xl flex items-center group transition-all duration-500 focus-within:ring-2 focus-within:ring-orange-500/30 border border-white/10">
-            <div className="relative flex-grow">
-              <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-orange-500 transition-all" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder="O que está a procurar?"
-                className="w-full h-12 md:h-14 pl-14 pr-4 rounded-full bg-transparent text-white placeholder:text-slate-500 focus:outline-none font-medium"
-              />
-            </div>
+      {/* Categories */}
+      <section ref={catRef} className="py-20 bg-card">
+        <div className="max-w-7xl mx-auto section-padding">
+          <div className="text-center mb-12">
+            <p className={`text-sm font-semibold text-accent uppercase tracking-widest mb-2 ${catVis ? "reveal-up" : "opacity-0"}`}>Categorias</p>
+            <h2 className={`text-3xl font-bold text-foreground ${catVis ? "reveal-up-delay-1" : "opacity-0"}`}>Encontre por tipo de produto</h2>
           </div>
-        </div>
-
-        {/* Filtros Enquadrados */}
-        <div className="w-full mb-10 overflow-hidden">
-          <div className="flex items-center gap-3 glass-panel p-2 rounded-2xl shadow-xl border border-white/5">
-            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 shrink-0">
-              <Zap size={18} className="fill-orange-500/30" />
-              <span className="hidden md:inline text-[10px] font-black uppercase tracking-widest">Filtros</span>
-            </div>
-
-            <div className="flex gap-2 overflow-x-auto no-scrollbar py-1 w-full items-center">
-              {categorias.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => handleCategoriaChange(c)}
-                  className={`whitespace-nowrap px-5 py-2.5 rounded-xl text-[11px] font-black transition-all duration-500 border flex-shrink-0 uppercase tracking-tight ${
-                    categoria === c
-                      ? "bg-orange-500 border-orange-400 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]"
-                      : "bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Listagem */}
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="rounded-[2.5rem] bg-slate-800/40 h-[300px] animate-pulse border border-white/5" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((cat, i) => (
+              <Link
+                key={cat.name}
+                to={`/produtos?categoria=${encodeURIComponent(cat.name)}`}
+                className={`group rounded-xl p-5 bg-background shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1 transition-all duration-300 text-center ${catVis ? "reveal-up" : "opacity-0"}`}
+                style={{ animationDelay: catVis ? `${i * 0.06}s` : undefined }}
+              >
+                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${cat.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
+                  <cat.icon size={22} className="text-foreground" />
+                </div>
+                <span className="text-sm font-semibold text-foreground">{cat.name}</span>
+              </Link>
             ))}
           </div>
-        ) : produtos.length === 0 ? (
-          <div className="text-center py-20 glass-panel rounded-[3rem] border border-white/5">
-            <Package size={60} className="mx-auto text-orange-500/20 mb-6" />
-            <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Nada encontrado</h3>
-            <p className="text-slate-500 mb-8 max-w-xs mx-auto text-sm font-medium">Não encontramos produtos com esses filtros.</p>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section ref={stepsRef} className="py-20">
+        <div className="max-w-7xl mx-auto section-padding">
+          <div className="text-center mb-12">
+            <p className={`text-sm font-semibold text-accent uppercase tracking-widest mb-2 ${stepsVis ? "reveal-up" : "opacity-0"}`}>Como funciona</p>
+            <h2 className={`text-3xl font-bold text-foreground ${stepsVis ? "reveal-up-delay-1" : "opacity-0"}`}>Simples e seguro</h2>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {produtos.map((p) => (
-              <div key={p.id} className="group relative flex flex-col h-full rounded-[2.5rem] overflow-hidden glass-panel border border-white/5 hover:border-orange-500/40 shadow-2xl transition-all duration-700 hover:-translate-y-2">
-                <div className="aspect-video overflow-hidden">
-                  <img src={p.imagem_url} alt={p.nome} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500" />
+          <div className="grid md:grid-cols-3 gap-8">
+            {steps.map((s, i) => (
+              <div key={s.step} className={`text-center ${stepsVis ? "reveal-up" : "opacity-0"}`} style={{ animationDelay: stepsVis ? `${(i + 1) * 0.1}s` : undefined }}>
+                <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-lg font-bold text-accent">{s.step}</span>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-black text-white mb-2">{p.nome}</h3>
-                  <div className="flex items-center gap-2 text-xs text-slate-500 font-bold uppercase tracking-widest">
-                    <MapPin size={14} className="text-orange-500" />
-                    {p.cidade}
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
-                    <span className="text-xl font-black text-orange-500">{p.preco}</span>
-                    <button className="px-4 py-2 bg-white/5 hover:bg-orange-500 rounded-xl text-[10px] font-black transition-all uppercase">Ver Detalhes</button>
-                  </div>
-                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">{s.title}</h3>
+                <p className="text-sm text-muted-foreground">{s.desc}</p>
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      </section>
+
+      {/* Featured products */}
+      {featuredProducts.length > 0 && (
+        <section ref={featRef} className="py-20 bg-card">
+          <div className="max-w-7xl mx-auto section-padding">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <p className={`text-sm font-semibold text-accent uppercase tracking-widest mb-2 ${featVis ? "reveal-up" : "opacity-0"}`}>Destaques</p>
+                <h2 className={`text-3xl font-bold text-foreground ${featVis ? "reveal-up-delay-1" : "opacity-0"}`}>Produtos em destaque</h2>
+              </div>
+              <Link to="/produtos">
+                <Button variant="outline" size="sm" className={featVis ? "reveal-up-delay-1" : "opacity-0"}>
+                  Ver todos <ArrowRight size={14} />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredProducts.map((p: any, i: number) => (
+                <Link
+                  key={p.id}
+                  to={`/produto/${p.id}`}
+                  className={`group rounded-xl overflow-hidden bg-background shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 ${featVis ? "reveal-up" : "opacity-0"}`}
+                  style={{ animationDelay: featVis ? `${i * 0.08}s` : undefined }}
+                >
+                  <div className="aspect-[4/3] bg-muted overflow-hidden">
+                    {p.imagem_url ? (
+                      <img src={p.imagem_url} alt={p.nome} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">Sem imagem</div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <span className="text-xs font-medium text-accent uppercase tracking-wider">{p.categoria}</span>
+                    <h3 className="text-lg font-semibold text-foreground mt-1">{p.nome}</h3>
+                    <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                      <MapPin size={14} />
+                      {p.cidade}
+                    </div>
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-sm font-semibold text-foreground">{p.preco || "Sob consulta"}</span>
+                      <span className="text-xs text-muted-foreground">{(p.locadores as any)?.nome}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
-}
+};
 
-/**
- * Componente principal Homepage
- * Envolve o conteúdo em um Router para satisfazer o hook useSearchParams.
- */
-export default function Homepage() {
-  return (
-    <Router>
-      <HomepageContent />
-    </Router>
-  );
-}
+export default HomePage;
