@@ -21,15 +21,23 @@ const CadastroLocadorPage = () => {
         setIsAdmin(false);
         return;
       }
-      const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      const { data, error } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+
+      if (error) {
+        console.error("ERRO AO VALIDAR ADMIN:", error);
+      }
+
       setIsAdmin(!!data);
     };
+
     checkAdmin();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const { data: { user } } = await supabase.auth.getUser();
+
     if (!user) {
       toast.error("Você precisa estar logado.");
       navigate("/login");
@@ -37,18 +45,25 @@ const CadastroLocadorPage = () => {
     }
 
     setLoading(true);
-    const { error } = await supabase.from("locadores").insert({
-      nome: nome.trim(),
-      telefone: telefone.trim(),
-      cidade: cidade.trim(),
-      tipo,
-      user_id: user.id,
-    });
+
+    const { data, error } = await supabase
+      .from("locadores")
+      .insert({
+        nome: nome.trim(),
+        telefone: telefone.trim(),
+        cidade: cidade.trim(),
+        tipo,
+        user_id: user.id,
+      })
+      .select();
+
     setLoading(false);
 
     if (error) {
-      toast.error("Erro ao cadastrar. Tente novamente.");
+      console.error("ERRO LOCADOR:", error);
+      toast.error(error.message || "Erro ao cadastrar. Tente novamente.");
     } else {
+      console.log("LOCADOR CADASTRADO:", data);
       toast.success("Locador cadastrado com sucesso!");
       navigate("/painel");
     }
@@ -77,29 +92,62 @@ const CadastroLocadorPage = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="text-sm font-medium text-foreground mb-1 block">Nome / Razão social *</label>
-          <input type="text" required maxLength={100} value={nome} onChange={(e) => setNome(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent" />
+          <input
+            type="text"
+            required
+            maxLength={100}
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className="w-full h-10 px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+          />
         </div>
+
         <div>
           <label className="text-sm font-medium text-foreground mb-1 block">Telefone *</label>
-          <input type="tel" required value={telefone} onChange={(e) => setTelefone(e.target.value)}
+          <input
+            type="tel"
+            required
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
             className="w-full h-10 px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-            placeholder="(11) 99999-0000" />
+            placeholder="(11) 99999-0000"
+          />
         </div>
+
         <div>
           <label className="text-sm font-medium text-foreground mb-1 block">Cidade *</label>
-          <input type="text" required maxLength={100} value={cidade} onChange={(e) => setCidade(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent" />
+          <input
+            type="text"
+            required
+            maxLength={100}
+            value={cidade}
+            onChange={(e) => setCidade(e.target.value)}
+            className="w-full h-10 px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+          />
         </div>
+
         <div>
           <label className="text-sm font-medium text-foreground mb-1 block">Tipo</label>
           <div className="flex gap-4">
             <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
-              <input type="radio" name="tipo" checked={tipo === "pessoa_fisica"} onChange={() => setTipo("pessoa_fisica")} className="accent-accent" />
+              <input
+                type="radio"
+                name="tipo"
+                checked={tipo === "pessoa_fisica"}
+                onChange={() => setTipo("pessoa_fisica")}
+                className="accent-accent"
+              />
               Pessoa Física
             </label>
+
             <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
-              <input type="radio" name="tipo" checked={tipo === "empresa"} onChange={() => setTipo("empresa")} className="accent-accent" />
+              <input
+                type="radio"
+                name="tipo"
+                checked={tipo === "empresa"}
+                onChange={() => setTipo("empresa")}
+                className="accent-accent"
+              />
               Empresa
             </label>
           </div>
