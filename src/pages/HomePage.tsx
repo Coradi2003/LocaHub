@@ -1,26 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { 
-  HashRouter as Router, 
-  Routes, 
-  Route, 
-  useSearchParams 
-} from "react-router-dom";
+import { HashRouter as Router, useSearchParams } from "react-router-dom";
 import { Search, MapPin, Sparkles, Zap, Package } from "lucide-react";
 
 /**
- * ProductsPage Component
- * * SOLUÇÃO PARA VERCEL (Ecrã Branco):
- * 1. Mudamos para HashRouter para evitar erros 404 ao atualizar a página.
- * 2. Removemos imports de ficheiros locais que não existem no repositório (ex: supabase client).
- * 3. Adicionamos tratamento de erro global para evitar que a app quebre silenciosamente.
+ * Interface para os Produtos
  */
+interface Produto {
+  id: number;
+  nome: string;
+  categoria: string;
+  cidade: string;
+  preco: string;
+  imagem_url: string;
+  locador_nome: string;
+}
 
-const categorias = ["Todos", "Mesas de Jogos", "Brinquedos Infláveis", "Alimentação", "Som e Iluminação", "Refrigeração", "Camas Elásticas", "Piscinas de Bolinha"];
+const categorias = [
+  "Todos", 
+  "Mesas de Jogos", 
+  "Brinquedos Infláveis", 
+  "Alimentação", 
+  "Som e Iluminação", 
+  "Refrigeração", 
+  "Camas Elásticas", 
+  "Piscinas de Bolinha"
+];
 
-const ProductsList = () => {
+/**
+ * HomepageContent Component
+ * Contém a lógica que utiliza hooks do router.
+ */
+function HomepageContent() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [produtos, setProdutos] = useState([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [categoria, setCategoria] = useState(searchParams.get("categoria") || "Todos");
 
@@ -28,11 +42,10 @@ const ProductsList = () => {
     const fetchProdutos = async () => {
       setLoading(true);
       try {
-        // Simulação de carregamento para garantir que o UI renderiza corretamente no Vercel
-        // Se fores usar Supabase, configura as variáveis de ambiente no painel do Vercel
+        // Simulação de carregamento (Mock Data)
         await new Promise(resolve => setTimeout(resolve, 600));
         
-        const mockData = [
+        const mockData: Produto[] = [
           { id: 1, nome: "Mesa de Air Hockey Profissional", categoria: "Mesas de Jogos", cidade: "São Paulo", preco: "R$ 150,00", imagem_url: "https://images.unsplash.com/photo-1543569612-4f386341295b?auto=format&fit=crop&q=60&w=600", locador_nome: "Festa Total" },
           { id: 2, nome: "Castelo Inflável Colorido", categoria: "Brinquedos Infláveis", cidade: "Campinas", preco: "R$ 200,00", imagem_url: "https://images.unsplash.com/photo-1533777857419-370500bb218c?auto=format&fit=crop&q=60&w=600", locador_nome: "Kids Fun" },
           { id: 3, nome: "Máquina de Algodão Doce", categoria: "Alimentação", cidade: "Santo André", preco: "R$ 80,00", imagem_url: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&q=60&w=600", locador_nome: "Doce Evento" }
@@ -46,7 +59,7 @@ const ProductsList = () => {
         
         setProdutos(filtered);
       } catch (error) {
-        console.error("Erro no build/renderização:", error);
+        console.error("Erro ao carregar dados:", error);
       } finally {
         setLoading(false);
       }
@@ -55,12 +68,12 @@ const ProductsList = () => {
     fetchProdutos();
   }, [search, categoria]);
 
-  const handleSearchChange = (val) => {
+  const handleSearchChange = (val: string) => {
     setSearch(val);
     setSearchParams({ q: val, categoria });
   };
 
-  const handleCategoriaChange = (cat) => {
+  const handleCategoriaChange = (cat: string) => {
     setCategoria(cat);
     setSearchParams({ q: search, categoria: cat });
   };
@@ -123,7 +136,7 @@ const ProductsList = () => {
           </div>
         </div>
 
-        {/* Filtros Enquadrados (Destaque da Seleção) */}
+        {/* Filtros Enquadrados */}
         <div className="w-full mb-10 overflow-hidden">
           <div className="flex items-center gap-3 glass-panel p-2 rounded-2xl shadow-xl border border-white/5">
             <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 shrink-0">
@@ -156,6 +169,12 @@ const ProductsList = () => {
               <div key={i} className="rounded-[2.5rem] bg-slate-800/40 h-[300px] animate-pulse border border-white/5" />
             ))}
           </div>
+        ) : produtos.length === 0 ? (
+          <div className="text-center py-20 glass-panel rounded-[3rem] border border-white/5">
+            <Package size={60} className="mx-auto text-orange-500/20 mb-6" />
+            <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Nada encontrado</h3>
+            <p className="text-slate-500 mb-8 max-w-xs mx-auto text-sm font-medium">Não encontramos produtos com esses filtros.</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {produtos.map((p) => (
@@ -181,17 +200,16 @@ const ProductsList = () => {
       </div>
     </div>
   );
-};
+}
 
-const App = () => {
+/**
+ * Componente principal Homepage
+ * Envolve o conteúdo em um Router para satisfazer o hook useSearchParams.
+ */
+export default function Homepage() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<ProductsList />} />
-        <Route path="*" element={<ProductsList />} />
-      </Routes>
+      <HomepageContent />
     </Router>
   );
-};
-
-export default App;
+}
