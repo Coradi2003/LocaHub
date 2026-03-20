@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, MapPin, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const categorias = ["Todos", "Mesas de Jogos", "Brinquedos Infláveis", "Alimentação", "Som e Iluminação", "Refrigeração", "Camas Elásticas", "Piscinas de Bolinha", "Eletrônicos"];
+const categorias = ["Todos", "Jogos", "Infláveis", "Alimentação", "Som e Iluminação", "Refrigeração", "Decoração", "Estruturas", "Eletrônicos"];
 
 const ProductsPage = () => {
   const [searchParams] = useSearchParams();
