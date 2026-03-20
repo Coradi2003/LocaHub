@@ -84,52 +84,50 @@ const HomePage = () => {
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative overflow-hidden border-b border-white/10"
+        className="relative overflow-hidden"
         style={{ background: "var(--hero-gradient)" }}
       >
         <div className="absolute inset-0">
           <img
             src={heroImg}
             alt=""
-            className="w-full h-full object-cover opacity-[0.16]"
+            className="w-full h-full object-cover opacity-[0.10]"
           />
           <div className="absolute inset-0 bg-slate-950/55" />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-slate-950/40 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/50 to-background" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto section-padding py-16 md:py-24 lg:py-28">
-          <div className="max-w-3xl">
+        <div className="relative z-10 max-w-7xl mx-auto section-padding pt-16 pb-14 md:pt-24 md:pb-20 lg:pt-28 lg:pb-24">
+          <div className="max-w-4xl mx-auto text-center">
             <div
               className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/85 backdrop-blur-md ${
                 heroVis ? "reveal-up" : "opacity-0"
               }`}
             >
               <Shield size={16} className="text-accent" />
-              Plataforma de locação com pré-cadastro seguro
+              Locação prática, segura e profissional
             </div>
 
             <h1
-              className={`mt-5 text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight ${
+              className={`mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight ${
                 heroVis ? "reveal-up-delay-1" : "opacity-0"
               }`}
             >
-              Alugue tudo para sua{" "}
-              <span className="text-accent">festa ou evento</span> de forma
-              rápida, segura e profissional
+              Tudo para sua festa ou evento em um só lugar
             </h1>
 
             <p
-              className={`mt-5 max-w-2xl text-base md:text-xl text-white/75 leading-relaxed ${
+              className={`mt-5 max-w-2xl mx-auto text-base md:text-lg text-white/72 leading-relaxed ${
                 heroVis ? "reveal-up-delay-2" : "opacity-0"
               }`}
             >
-              Encontre brinquedos, infláveis, alimentação, decoração, som,
-              refrigeração e muito mais em um catálogo bonito, confiável e fácil
-              de explorar.
+              Encontre produtos para locação com um visual bonito, navegação
+              simples e uma experiência que passa confiança desde o primeiro
+              clique.
             </p>
 
             <div
-              className={`mt-8 rounded-3xl border border-white/10 bg-white/95 p-3 md:p-4 shadow-2xl ${
+              className={`mt-8 rounded-[28px] border border-white/10 bg-white/95 p-3 md:p-4 shadow-2xl max-w-4xl mx-auto ${
                 heroVis ? "reveal-up-delay-3" : "opacity-0"
               }`}
             >
@@ -141,7 +139,7 @@ const HomePage = () => {
                   />
                   <input
                     type="text"
-                    placeholder="Busque por produto, categoria ou cidade..."
+                    placeholder="Buscar produto, categoria ou cidade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full h-12 md:h-14 pl-11 pr-4 rounded-2xl border border-border bg-background text-foreground text-sm md:text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
@@ -155,14 +153,14 @@ const HomePage = () => {
                   <Button
                     variant="accent"
                     size="lg"
-                    className="h-12 md:h-14 w-full lg:px-8 rounded-2xl text-sm md:text-base"
+                    className="h-12 md:h-14 w-full lg:px-8 rounded-2xl"
                   >
                     Buscar agora
                   </Button>
                 </Link>
               </div>
 
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap justify-center gap-2">
                 <button
                   type="button"
                   onClick={() => setSelectedCategory("Todos")}
@@ -194,46 +192,46 @@ const HomePage = () => {
             </div>
 
             <div
-              className={`mt-6 flex flex-wrap items-center gap-3 ${
+              className={`mt-6 flex flex-wrap items-center justify-center gap-3 ${
                 heroVis ? "reveal-up-delay-4" : "opacity-0"
               }`}
             >
               <Link to="/produtos">
-                <Button variant="hero" size="lg" className="rounded-2xl">
+                <Button variant="hero" size="lg" className="rounded-2xl px-7">
                   Explorar produtos <ArrowRight size={16} />
                 </Button>
               </Link>
             </div>
 
             <div
-              className={`mt-8 flex flex-wrap gap-3 md:gap-4 ${
+              className={`mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 ${
                 heroVis ? "reveal-up-delay-4" : "opacity-0"
               }`}
             >
-              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white backdrop-blur-md">
-                <p className="text-xs uppercase tracking-wide text-white/60">
-                  Locação fácil
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-white backdrop-blur-md text-left">
+                <p className="text-xs uppercase tracking-wide text-white/55">
+                  Navegação intuitiva
                 </p>
-                <p className="text-sm md:text-base font-semibold">
-                  Navegação rápida e intuitiva
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white backdrop-blur-md">
-                <p className="text-xs uppercase tracking-wide text-white/60">
-                  Catálogo visual
-                </p>
-                <p className="text-sm md:text-base font-semibold">
-                  Produtos em destaque logo na entrada
+                <p className="mt-1 text-sm md:text-base font-semibold">
+                  O cliente encontra rápido o que quer alugar
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white backdrop-blur-md">
-                <p className="text-xs uppercase tracking-wide text-white/60">
-                  Mais confiança
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-white backdrop-blur-md text-left">
+                <p className="text-xs uppercase tracking-wide text-white/55">
+                  Visual profissional
                 </p>
-                <p className="text-sm md:text-base font-semibold">
-                  Pré-cadastro para segurança
+                <p className="mt-1 text-sm md:text-base font-semibold">
+                  Cara de vitrine premium para locação
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-white backdrop-blur-md text-left">
+                <p className="text-xs uppercase tracking-wide text-white/55">
+                  Mais segurança
+                </p>
+                <p className="mt-1 text-sm md:text-base font-semibold">
+                  Pré-cadastro para uma experiência confiável
                 </p>
               </div>
             </div>
@@ -241,7 +239,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* PRODUTOS NA HOME */}
+      {/* PRODUTOS */}
       <section ref={productsRef} className="py-14 md:py-20">
         <div className="max-w-7xl mx-auto section-padding">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
@@ -251,22 +249,22 @@ const HomePage = () => {
                   productsVis ? "reveal-up" : "opacity-0"
                 }`}
               >
-                Produtos para locação
+                Catálogo em destaque
               </p>
               <h2
                 className={`text-3xl md:text-4xl font-bold text-foreground ${
                   productsVis ? "reveal-up-delay-1" : "opacity-0"
                 }`}
               >
-                Escolha o que precisa para o seu evento
+                Escolha o produto ideal para o seu evento
               </h2>
               <p
                 className={`text-muted-foreground mt-2 max-w-2xl ${
                   productsVis ? "reveal-up-delay-2" : "opacity-0"
                 }`}
               >
-                Um catálogo bonito, responsivo e direto ao ponto para o cliente
-                entrar no site e já sentir vontade de alugar.
+                Um catálogo organizado para despertar vontade de alugar logo na
+                entrada do site.
               </p>
             </div>
 
@@ -283,7 +281,7 @@ const HomePage = () => {
             </Link>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-7">
             <button
               type="button"
               onClick={() => setSelectedCategory("Todos")}
@@ -335,7 +333,7 @@ const HomePage = () => {
                 <Link
                   key={p.id}
                   to={`/produto/${p.id}`}
-                  className={`group rounded-3xl border border-border bg-card overflow-hidden shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1.5 transition-all duration-300 ${
+                  className={`group rounded-3xl border border-border/70 bg-card overflow-hidden shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1.5 transition-all duration-300 ${
                     productsVis ? "reveal-up" : "opacity-0"
                   }`}
                   style={{
@@ -355,7 +353,7 @@ const HomePage = () => {
                       </div>
                     )}
 
-                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent pointer-events-none" />
 
                     <div className="absolute top-3 left-3 flex flex-wrap gap-2">
                       {p.destaque && (
