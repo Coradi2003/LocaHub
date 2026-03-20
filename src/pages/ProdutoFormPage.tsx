@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const categorias = ["Jogos", "Infláveis", "Alimentação", "Som e Iluminação", "Refrigeração", "Decoração", "Estruturas", "Eletrônicos"];
+const categorias = ["Mesas de Jogos", "Brinquedos Infláveis", "Alimentação", "Som e Iluminação", "Refrigeração", "Camas Elásticas", "Piscinas de Bolinha", "Eletrônicos"];
 
 const ProdutoFormPage = () => {
   const { id } = useParams<{ id: string }>();
