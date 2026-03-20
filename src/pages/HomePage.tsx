@@ -91,148 +91,149 @@ const HomePage = () => {
           <img
             src={heroImg}
             alt=""
-            className="w-full h-full object-cover opacity-[0.14]"
+            className="w-full h-full object-cover opacity-[0.16]"
           />
-          <div className="absolute inset-0 bg-black/35" />
+          <div className="absolute inset-0 bg-slate-950/55" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-slate-950/40 to-background" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto section-padding py-16 md:py-24 lg:py-28">
-          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
-            <div className="max-w-2xl">
-              <div
-                className={`inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-4 py-2 text-sm text-white/85 ${
-                  heroVis ? "reveal-up" : "opacity-0"
-                }`}
-              >
-                <Shield size={16} className="text-accent" />
-                Plataforma de locação com pré-cadastro seguro
-              </div>
+          <div className="max-w-3xl">
+            <div
+              className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/85 backdrop-blur-md ${
+                heroVis ? "reveal-up" : "opacity-0"
+              }`}
+            >
+              <Shield size={16} className="text-accent" />
+              Plataforma de locação com pré-cadastro seguro
+            </div>
 
-              <h1
-                className={`mt-5 text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight ${
-                  heroVis ? "reveal-up-delay-1" : "opacity-0"
-                }`}
-              >
-                Encontre produtos para{" "}
-                <span className="text-accent">festas e eventos</span> com visual
-                de marketplace e aluguel simplificado
-              </h1>
+            <h1
+              className={`mt-5 text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight ${
+                heroVis ? "reveal-up-delay-1" : "opacity-0"
+              }`}
+            >
+              Alugue tudo para sua{" "}
+              <span className="text-accent">festa ou evento</span> de forma
+              rápida, segura e profissional
+            </h1>
 
-              <p
-                className={`mt-5 text-base md:text-lg text-white/70 max-w-xl ${
-                  heroVis ? "reveal-up-delay-2" : "opacity-0"
-                }`}
-              >
-                Busque por categoria, veja opções disponíveis e encontre
-                locadores de forma prática, bonita e profissional.
-              </p>
+            <p
+              className={`mt-5 max-w-2xl text-base md:text-xl text-white/75 leading-relaxed ${
+                heroVis ? "reveal-up-delay-2" : "opacity-0"
+              }`}
+            >
+              Encontre brinquedos, infláveis, alimentação, decoração, som,
+              refrigeração e muito mais em um catálogo bonito, confiável e fácil
+              de explorar.
+            </p>
 
-              <div
-                className={`mt-7 bg-white/95 rounded-2xl p-3 md:p-4 shadow-2xl ${
-                  heroVis ? "reveal-up-delay-3" : "opacity-0"
-                }`}
-              >
-                <div className="flex flex-col md:flex-row gap-3">
-                  <div className="flex-1 relative">
-                    <Search
-                      size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Buscar produto, cidade ou categoria..."
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      className="w-full h-12 md:h-14 pl-11 pr-4 rounded-xl border border-border bg-background text-foreground text-sm md:text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-                    />
-                  </div>
-
-                  <Link
-                    to={`/produtos${search ? `?q=${encodeURIComponent(search)}` : ""}`}
-                    className="w-full md:w-auto"
-                  >
-                    <Button
-                      variant="accent"
-                      size="lg"
-                      className="h-12 md:h-14 w-full md:px-8 rounded-xl"
-                    >
-                      Buscar agora
-                    </Button>
-                  </Link>
+            <div
+              className={`mt-8 rounded-3xl border border-white/10 bg-white/95 p-3 md:p-4 shadow-2xl ${
+                heroVis ? "reveal-up-delay-3" : "opacity-0"
+              }`}
+            >
+              <div className="flex flex-col lg:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <Search
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Busque por produto, categoria ou cidade..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full h-12 md:h-14 pl-11 pr-4 rounded-2xl border border-border bg-background text-foreground text-sm md:text-base placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+                  />
                 </div>
 
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.name}
-                      type="button"
-                      onClick={() => setSelectedCategory(cat.name)}
-                      className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs md:text-sm transition-all border ${
-                        selectedCategory === cat.name
-                          ? "bg-accent text-accent-foreground border-accent"
-                          : "bg-background text-foreground border-border hover:border-accent/50"
-                      }`}
-                    >
-                      <cat.icon size={14} />
-                      {cat.name}
-                    </button>
-                  ))}
+                <Link
+                  to={`/produtos${search ? `?q=${encodeURIComponent(search)}` : ""}`}
+                  className="w-full lg:w-auto"
+                >
+                  <Button
+                    variant="accent"
+                    size="lg"
+                    className="h-12 md:h-14 w-full lg:px-8 rounded-2xl text-sm md:text-base"
+                  >
+                    Buscar agora
+                  </Button>
+                </Link>
+              </div>
 
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("Todos")}
+                  className={`inline-flex items-center rounded-full px-4 py-2 text-xs md:text-sm border transition-all ${
+                    selectedCategory === "Todos"
+                      ? "bg-accent text-accent-foreground border-accent"
+                      : "bg-background text-foreground border-border hover:border-accent/50"
+                  }`}
+                >
+                  Ver todos
+                </button>
+
+                {categories.map((cat) => (
                   <button
+                    key={cat.name}
                     type="button"
-                    onClick={() => setSelectedCategory("Todos")}
-                    className={`inline-flex items-center rounded-full px-3 py-2 text-xs md:text-sm transition-all border ${
-                      selectedCategory === "Todos"
+                    onClick={() => setSelectedCategory(cat.name)}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs md:text-sm border transition-all ${
+                      selectedCategory === cat.name
                         ? "bg-accent text-accent-foreground border-accent"
                         : "bg-background text-foreground border-border hover:border-accent/50"
                     }`}
                   >
-                    Ver todos
+                    <cat.icon size={14} />
+                    {cat.name}
                   </button>
-                </div>
-              </div>
-
-              <div
-                className={`mt-6 flex flex-wrap items-center gap-4 ${
-                  heroVis ? "reveal-up-delay-4" : "opacity-0"
-                }`}
-              >
-                <Link to="/produtos">
-                  <Button variant="hero" size="lg" className="rounded-xl">
-                    Explorar produtos <ArrowRight size={16} />
-                  </Button>
-                </Link>
+                ))}
               </div>
             </div>
 
             <div
-              className={`grid grid-cols-2 gap-4 ${
+              className={`mt-6 flex flex-wrap items-center gap-3 ${
                 heroVis ? "reveal-up-delay-4" : "opacity-0"
               }`}
             >
-              <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md p-5 text-white">
-                <p className="text-sm text-white/65">Produtos cadastrados</p>
-                <h3 className="mt-2 text-3xl font-bold">{products.length}+</h3>
-                <p className="mt-2 text-sm text-white/70">
-                  Itens para festas, eventos e locação empresarial.
+              <Link to="/produtos">
+                <Button variant="hero" size="lg" className="rounded-2xl">
+                  Explorar produtos <ArrowRight size={16} />
+                </Button>
+              </Link>
+            </div>
+
+            <div
+              className={`mt-8 flex flex-wrap gap-3 md:gap-4 ${
+                heroVis ? "reveal-up-delay-4" : "opacity-0"
+              }`}
+            >
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white backdrop-blur-md">
+                <p className="text-xs uppercase tracking-wide text-white/60">
+                  Locação fácil
+                </p>
+                <p className="text-sm md:text-base font-semibold">
+                  Navegação rápida e intuitiva
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md p-5 text-white">
-                <p className="text-sm text-white/65">Categorias</p>
-                <h3 className="mt-2 text-3xl font-bold">{categories.length}</h3>
-                <p className="mt-2 text-sm text-white/70">
-                  Navegação rápida por tipo de produto.
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white backdrop-blur-md">
+                <p className="text-xs uppercase tracking-wide text-white/60">
+                  Catálogo visual
+                </p>
+                <p className="text-sm md:text-base font-semibold">
+                  Produtos em destaque logo na entrada
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md p-5 text-white col-span-2">
-                <p className="text-sm text-white/65">Experiência profissional</p>
-                <h3 className="mt-2 text-2xl font-bold">
-                  Layout mais moderno, responsivo e focado em conversão
-                </h3>
-                <p className="mt-2 text-sm text-white/70">
-                  Cara de e-commerce, mas totalmente pensado para locação.
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white backdrop-blur-md">
+                <p className="text-xs uppercase tracking-wide text-white/60">
+                  Mais confiança
+                </p>
+                <p className="text-sm md:text-base font-semibold">
+                  Pré-cadastro para segurança
                 </p>
               </div>
             </div>
@@ -257,15 +258,15 @@ const HomePage = () => {
                   productsVis ? "reveal-up-delay-1" : "opacity-0"
                 }`}
               >
-                Produtos em destaque na home
+                Escolha o que precisa para o seu evento
               </h2>
               <p
                 className={`text-muted-foreground mt-2 max-w-2xl ${
                   productsVis ? "reveal-up-delay-2" : "opacity-0"
                 }`}
               >
-                Um catálogo visual, bonito e responsivo para o cliente já entrar
-                no site vendo os itens disponíveis.
+                Um catálogo bonito, responsivo e direto ao ponto para o cliente
+                entrar no site e já sentir vontade de alugar.
               </p>
             </div>
 
@@ -273,7 +274,9 @@ const HomePage = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className={productsVis ? "reveal-up-delay-2" : "opacity-0"}
+                className={`rounded-2xl ${
+                  productsVis ? "reveal-up-delay-2" : "opacity-0"
+                }`}
               >
                 Ver catálogo completo <ArrowRight size={16} />
               </Button>
@@ -314,7 +317,7 @@ const HomePage = () => {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-border bg-card overflow-hidden animate-pulse"
+                  className="rounded-3xl border border-border bg-card overflow-hidden animate-pulse"
                 >
                   <div className="aspect-[4/3] bg-muted" />
                   <div className="p-4 space-y-3">
@@ -332,11 +335,11 @@ const HomePage = () => {
                 <Link
                   key={p.id}
                   to={`/produto/${p.id}`}
-                  className={`group rounded-2xl border border-border bg-card overflow-hidden shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1 transition-all duration-300 ${
+                  className={`group rounded-3xl border border-border bg-card overflow-hidden shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1.5 transition-all duration-300 ${
                     productsVis ? "reveal-up" : "opacity-0"
                   }`}
                   style={{
-                    animationDelay: productsVis ? `${i * 0.06}s` : undefined,
+                    animationDelay: productsVis ? `${i * 0.05}s` : undefined,
                   }}
                 >
                   <div className="relative aspect-[4/3] bg-muted overflow-hidden">
@@ -352,7 +355,9 @@ const HomePage = () => {
                       </div>
                     )}
 
-                    <div className="absolute top-3 left-3 flex gap-2">
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
+
+                    <div className="absolute top-3 left-3 flex flex-wrap gap-2">
                       {p.destaque && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-accent text-accent-foreground text-xs font-medium px-3 py-1">
                           <Star size={12} />
@@ -361,7 +366,7 @@ const HomePage = () => {
                       )}
 
                       {p.categoria && (
-                        <span className="rounded-full bg-black/65 text-white text-xs font-medium px-3 py-1 backdrop-blur-sm">
+                        <span className="rounded-full bg-black/60 text-white text-xs font-medium px-3 py-1 backdrop-blur-sm">
                           {p.categoria}
                         </span>
                       )}
@@ -373,37 +378,37 @@ const HomePage = () => {
                       {p.nome}
                     </h3>
 
-                    <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                    <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin size={14} />
-                      <span className="line-clamp-1">{p.cidade || "Cidade não informada"}</span>
+                      <span className="line-clamp-1">
+                        {p.cidade || "Cidade não informada"}
+                      </span>
                     </div>
 
-                    <div className="mt-2 text-sm text-muted-foreground">
+                    <div className="mt-2 text-sm text-muted-foreground line-clamp-1">
                       Locador: {(p.locadores as any)?.nome || "Não informado"}
                     </div>
 
-                    <div className="mt-4 flex items-center justify-between gap-3">
+                    <div className="mt-5 flex items-end justify-between gap-3">
                       <div>
                         <p className="text-xs text-muted-foreground">
                           Valor de locação
                         </p>
-                        <p className="text-lg font-bold text-foreground">
+                        <p className="text-lg md:text-xl font-bold text-foreground">
                           {p.preco || "Sob consulta"}
                         </p>
                       </div>
 
-                      <div className="shrink-0">
-                        <span className="inline-flex items-center justify-center rounded-xl border border-border px-3 py-2 text-sm font-medium text-foreground group-hover:border-accent group-hover:text-accent transition-colors">
-                          Ver mais
-                        </span>
-                      </div>
+                      <span className="inline-flex items-center justify-center rounded-2xl border border-border px-3 py-2 text-sm font-medium text-foreground group-hover:border-accent group-hover:text-accent transition-colors">
+                        Ver mais
+                      </span>
                     </div>
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
+            <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center">
               <h3 className="text-xl font-semibold text-foreground">
                 Nenhum produto encontrado
               </h3>
