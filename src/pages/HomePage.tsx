@@ -3,16 +3,16 @@ import {
   HashRouter as Router, 
   Routes, 
   Route, 
-  Link, 
   useSearchParams 
 } from "react-router-dom";
-import { Search, MapPin, Filter, Sparkles, Zap, Package } from "lucide-react";
+import { Search, MapPin, Sparkles, Zap, Package } from "lucide-react";
 
 /**
  * ProductsPage Component
  * Design moderno com background animado, glassmorphism e filtros responsivos.
- * Nota: A referência ao Supabase foi comentada para permitir a compilação no preview, 
- * mas a lógica de estado foi mantida para fácil restauração.
+ * * NOTA DE PRODUÇÃO: 
+ * Utilizamos o HashRouter para evitar o erro de "ecrã branco" em servidores 
+ * que não suportam redirecionamento de rotas SPA (como GitHub Pages ou instâncias simples).
  */
 
 const categorias = ["Todos", "Mesas de Jogos", "Brinquedos Infláveis", "Alimentação", "Som e Iluminação", "Refrigeração", "Camas Elásticas", "Piscinas de Bolinha"];
@@ -28,15 +28,24 @@ const ProductsList = () => {
     const fetchProdutos = async () => {
       setLoading(true);
       try {
-        /* Lógica original com Supabase (Comentada para evitar erro de resolução no preview)*/
-         let query = supabase.from("produtos").select("*");
-         if (search) query = query.ilike("nome", `%${search}%`);
-         if (categoria !== "Todos") query = query.eq("categoria", categoria);
-         const { data, error } = await query;
-         if (error) throw error;
-         
+        /** * Lógica de Integração:
+         * Para produção com Supabase, importa o cliente e remove os comentários abaixo.
+         * import { supabase } from "@/integrations/supabase/client";
+         * * let query = supabase.from("produtos").select("*");
+         * if (search) query = query.ilike("nome", `%${search}%`);
+         * if (categoria !== "Todos") query = query.eq("categoria", categoria);
+         * const { data, error } = await query;
+         * if (error) throw error;
+         * setProdutos(data || []);
+         */
 
-
+        // Simulação de carregamento para visualização no Canvas
+        await new Promise(resolve => setTimeout(resolve, 800));
+        const mockData = [
+          { id: 1, nome: "Mesa de Air Hockey Profissional", categoria: "Mesas de Jogos", cidade: "São Paulo", preco: "R$ 150,00", imagem_url: "https://images.unsplash.com/photo-1543569612-4f386341295b?auto=format&fit=crop&q=60&w=600", locador_nome: "Festa Total" },
+          { id: 2, nome: "Castelo Inflável Colorido", categoria: "Brinquedos Infláveis", cidade: "Campinas", preco: "R$ 200,00", imagem_url: "https://images.unsplash.com/photo-1533777857419-370500bb218c?auto=format&fit=crop&q=60&w=600", locador_nome: "Kids Fun" },
+          { id: 3, nome: "Máquina de Algodão Doce", categoria: "Alimentação", cidade: "Santo André", preco: "R$ 80,00", imagem_url: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&q=60&w=600", locador_nome: "Doce Evento" }
+        ];
 
         const filtered = mockData.filter(p => {
           const matchSearch = p.nome.toLowerCase().includes(search.toLowerCase());
@@ -110,7 +119,7 @@ const ProductsList = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20">
         
-        {/* Search Bar (Área selecionada pelo utilizador) */}
+        {/* Search Bar */}
         <div className="mb-10 max-w-3xl mx-auto">
           <div className="glass-panel p-1 rounded-full shadow-2xl flex items-center group transition-all duration-500 focus-within:ring-2 focus-within:ring-orange-500/30 border border-white/10">
             <div className="relative flex-grow">
